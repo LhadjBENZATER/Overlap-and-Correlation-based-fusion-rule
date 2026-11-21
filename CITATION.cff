@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "Please cite this software and the associated paper when relevant."
+title: "Overlapping-Subband Spectrum Fusion"
+type: software
+authors:
+  - family-names: Benzater
+    given-names: Hadj Abdelkader
+    orcid: https://orcid.org/0009-0006-2533-0315
+url: https://github.com/LhadjBENZATER/Overlap-and-Correlation-based-fusion-rule
+repository-code: https://github.com/LhadjBENZATER/Overlap-and-Correlation-based-fusion-rule
+license: MIT
+keywords:
+  - MATLAB
+  - telecommunications
+  - reproducible-research
+preferred-citation:
+  type: article
+  title: "Blind weighted fusion and overlapping subband methods for cooperative sparse recovery in compressed sensing"
+  authors:
+    - family-names: "Benzater"
+      given-names: "Hadj Abdelkader"
+    - family-names: "Teguig"
+      given-names: "Djamal"
+    - family-names: "Lassami"
+      given-names: "Nacerredine"
+    - family-names: "Zeraoula"
+      given-names: "Hamza"
+  year: 2025
+  doi: 10.1088/1402-4896/ae19aa
+  journal: "Physica Scripta, 100(11), 115210"

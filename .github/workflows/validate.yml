@@ -1,0 +1,55 @@
+name: Validate MATLAB example
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish the tested v1.1.0 package if it does not exist
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+      - uses: matlab-actions/run-command@v3
+        with:
+          command: run_validation
+      - uses: actions/upload-artifact@v6
+        with:
+          name: example-results
+          path: |
+            results/
+            docs/preview.svg
+            docs/validation.txt
+      - name: Save verified preview and validation log
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/preview.svg docs/validation.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record verified MATLAB example and preview'
+            git push
+          fi
+      - name: Publish tested example package
+        if: github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, '[release]') || inputs.publish_release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v1.1.0 >/dev/null 2>&1; then
+            echo 'v1.1.0 already exists; leaving it unchanged.'
+          else
+            git archive --format=zip --output=Overlap-and-Correlation-based-fusion-rule-v1.1.0.zip HEAD
+            gh release create v1.1.0 Overlap-and-Correlation-based-fusion-rule-v1.1.0.zip --target "$(git rev-parse HEAD)" --title 'v1.1.0 — Runnable research example' --notes-file RELEASE_NOTES.md
+          fi
